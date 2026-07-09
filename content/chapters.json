@@ -1,0 +1,847 @@
+{
+  "sections": [
+    {
+      "id": "basics",
+      "title": "基础语法",
+      "range": "00 → 05",
+      "description": "从零到能写小工具——变量、容器、控制流、函数。"
+    },
+    {
+      "id": "advanced",
+      "title": "进阶特性",
+      "range": "06 → 09",
+      "description": "结构体、错误处理、并发、接口——理解 Go 的核心机制。"
+    },
+    {
+      "id": "engineering",
+      "title": "工程化与实践",
+      "range": "10 → 11",
+      "description": "模块管理、测试、HTTP 服务——从学会到能用。"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "00",
+      "slug": "why-go",
+      "title": "为什么学 Go",
+      "summary": "正式开课前的开胃菜——Go 为什么火、能干啥、值不值得学。",
+      "type": "reading",
+      "minutes": 12,
+      "exercises": 0,
+      "section": "basics"
+    },
+    {
+      "id": "01",
+      "slug": "first-program",
+      "title": "安装与第一个程序",
+      "summary": "认识 Go，写下第一行代码——本课在浏览器里跑，不用装环境。",
+      "type": "coding",
+      "minutes": 30,
+      "exercises": 3,
+      "section": "basics",
+      "sections": [
+        {
+          "id": "01-01",
+          "title": "程序基本结构",
+          "exerciseList": [
+            {
+              "id": "01-01-1",
+              "title": "Hello, Go!",
+              "description": "按照教程第 5 节，使用 `fmt.Println` 打印 `Hello, Go!`。回忆：`package main`、`import \"fmt\"`、`func main()` 缺一不可。",
+              "hint": "在 func main() 的花括号里写：fmt.Println(\"Hello, Go!\")",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 在这里打印 Hello, Go!\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"Hello, Go!\")\n}\n",
+              "tests": [{ "type": "stdout", "expected": "Hello, Go!" }],
+              "explanation": "考点：Go 程序的基本结构。每个 Go 程序都需要 package main 声明和 func main() 入口函数。\nfmt.Println 是 fmt 包提供的输出函数，Println 会在末尾自动换行。\n注意：字符串必须用双引号，Go 不支持单引号字符串。单引号在 Go 中用于字符（rune 类型）。"
+            }
+          ]
+        },
+        {
+          "id": "01-02",
+          "title": "运行与常见错误",
+          "exerciseList": [
+            {
+              "id": "01-02-1",
+              "title": "打印你的名字",
+              "description": "用 `fmt.Println` 打印一行：`My name is Go learner`（注意大小写、空格和标点，必须完全一致）。",
+              "hint": "在 func main() 的花括号里写：fmt.Println(\"My name is Go learner\")",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "My name is Go learner" }],
+              "explanation": "考点：fmt.Println 输出字符串。Println 接受多个参数时会用空格分隔，单个参数原样输出。\n注意：输出内容必须与预期完全一致，包括大小写和标点符号。\n最佳实践：编写代码时仔细检查字符串的拼写和格式，避免多余或缺失的空格。"
+            }
+          ]
+        },
+        {
+          "id": "01-03",
+          "title": "综合小项目：自我介绍卡片",
+          "exerciseList": [
+            {
+              "id": "01-03-1",
+              "title": "打印自我介绍卡片",
+              "description": "用 fmt.Println 打印一张自我介绍卡片。效果如下：\n```\n====================\n我是 Go 学习者\n今天开始学 Go！\n加油！💪\n====================\n```\n注意：每行的符号、文字都要完全一致。",
+              "hint": "用 5 个 fmt.Println 分别打印每一行。第一行和最后一行是 20 个等号。",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 在这里打印自我介绍卡片\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"====================\")\n\tfmt.Println(\"我是 Go 学习者\")\n\tfmt.Println(\"今天开始学 Go！\")\n\tfmt.Println(\"加油！💪\")\n\tfmt.Println(\"====================\")\n}\n",
+              "tests": [{ "type": "stdout", "expected": "====================\n我是 Go 学习者\n今天开始学 Go！\n加油！💪\n====================" }],
+              "explanation": "考点：多次调用 fmt.Println 实现多行输出，每个 Println 输出一行并自动换行。\n注意：字符串中的符号、中文和 emoji 都要原样输出，不能遗漏。\n最佳实践：多行输出时建议每个 Println 对应一行，便于阅读和修改。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "slug": "variables",
+      "title": "变量与基本类型",
+      "summary": "从 fmt 开始，掌握 string、int、bool 和变量声明。",
+      "type": "coding",
+      "minutes": 40,
+      "exercises": 7,
+      "section": "basics",
+      "sections": [
+        {
+          "id": "02-01",
+          "title": "变量声明与类型",
+          "exerciseList": [
+            {
+              "id": "02-01-1",
+              "title": "var 声明变量",
+              "description": "用 `var` 声明整型变量 `age` 并赋值为 18，然后用 `fmt.Println` 打印 `age`。",
+              "hint": "var age int = 18  或  var age = 18",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "18" }],
+              "explanation": "考点：用 var 声明变量。可写 var age int = 18 或省略类型 var age = 18（类型推导）。\n注意：声明但未赋值的整型变量默认值为 0。\n最佳实践：函数内部推荐用短变量声明 :=，var 多用于包级变量或需要零值初始化的场景。"
+            },
+            {
+              "id": "02-01-2",
+              "title": "短变量声明 := ",
+              "description": "在 `main` 里用 `:=` 声明 `name := \"Gopher\"` 并打印 `name`。",
+              "hint": "name := \"Gopher\"  然后  fmt.Println(name)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "Gopher" }],
+              "explanation": "考点：短变量声明 := 是函数内最常用的声明方式，会自动推导变量类型。\n注意：:= 只能在函数内部使用，不能在包级作用域使用。\n最佳实践：函数内优先使用 := 而不是 var，代码更简洁。"
+            }
+          ]
+        },
+        {
+          "id": "02-02",
+          "title": "常量与打印",
+          "exerciseList": [
+            {
+              "id": "02-02-1",
+              "title": "常量 const",
+              "description": "用 `const` 定义常量 `Pi = 3.14`，在 main 里打印 `Pi`（输出应为 3.14）。",
+              "hint": "const Pi = 3.14  浮点数会按默认格式打印",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "3.14" }],
+              "explanation": "考点：const 定义常量，常量在编译期确定，运行时不可修改。\n注意：常量可以不指定类型（无类型常量），使用时按上下文自动转换。\n最佳实践：常量名用驼峰命名（如 Pi），不像其他语言强制全大写。"
+            },
+            {
+              "id": "02-02-2",
+              "title": "Printf 格式化",
+              "description": "声明 `name := \"Alice\"` 和 `age := 20`，用 `fmt.Printf` 打印：`My name is Alice, I'm 20 years old`（注意格式完全一致）。",
+              "hint": "fmt.Printf(\"My name is %s, I'm %d years old\\n\", name, age)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tname := \"Alice\"\n\tage := 20\n\t// 在这里用 Printf 格式化输出\n}\n",
+              "tests": [{ "type": "stdout", "expected": "My name is Alice, I'm 20 years old" }],
+              "explanation": "考点：fmt.Printf 格式化输出。%s 表示字符串，%d 表示整数，%f 表示浮点数。\n注意：Printf 不会自动换行，需要换行时要在格式串末尾加换行符。\n最佳实践：格式化字符串时注意占位符与参数的类型和顺序要一一对应。"
+            }
+          ]
+        },
+        {
+          "id": "02-03",
+          "title": "类型转换与运算",
+          "exerciseList": [
+            {
+              "id": "02-03-1",
+              "title": "类型转换",
+              "description": "声明 `x := 10`（int 类型），转换成 float64 后乘以 0.5，打印结果（应为 5）。",
+              "hint": "result := float64(x) * 0.5\nfmt.Println(result)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tx := 10\n\t// 转换成 float64 并乘以 0.5\n}\n",
+              "tests": [{ "type": "stdout", "expected": "5" }],
+              "explanation": "考点：Go 的类型转换需要显式声明，如 float64(x) 把 int 转换为 float64。\n注意：Go 没有自动类型提升，不同类型不能直接运算，必须先转换。\n最佳实践：涉及整数和浮点数混合运算时，注意先把整型转换为浮点型。"
+            },
+            {
+              "id": "02-03-2",
+              "title": "字符串拼接",
+              "description": "用 `+` 拼接 `\"Hello\"` 和 `\"World\"`，中间加逗号和空格，打印结果（应为 Hello, World）。",
+              "hint": "\"Hello\" + \", \" + \"World\"",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 拼接两个字符串\n}\n",
+              "tests": [{ "type": "stdout", "expected": "Hello, World" }],
+              "explanation": "考点：用加号 + 拼接字符串。\n注意：字符串拼接会生成新的字符串，频繁拼接大量字符串时建议用 strings.Builder。\n最佳实践：少量拼接用 + 即可，性能敏感场景用 strings.Builder 更高效。"
+            }
+          ]
+        },
+        {
+          "id": "02-04",
+          "title": "综合小项目：BMI 计算器",
+          "exerciseList": [
+            {
+              "id": "02-04-1",
+              "title": "计算 BMI 指数",
+              "description": "用变量存储身高（height，单位米，float64）和体重（weight，单位公斤，float64），然后用公式 BMI = 体重 / (身高 × 身高) 计算 BMI 值，最后用 fmt.Printf 格式化输出，保留一位小数。\n\n例如：身高 1.75 米，体重 65 公斤，BMI 约为 21.2。\n\n输出格式：`你的BMI是：21.2`",
+              "hint": "height := 1.75\nweight := 65.0\nbmi := weight / (height * height)\nfmt.Printf(\"你的BMI是：%.1f\", bmi)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 定义身高和体重变量\n\t// 计算 BMI\n\t// 格式化输出结果\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\theight := 1.75\n\tweight := 65.0\n\tbmi := weight / (height * height)\n\tfmt.Printf(\"你的BMI是：%.1f\", bmi)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "你的BMI是：21.2" }],
+              "explanation": "考点：综合运用变量声明、浮点运算和 Printf 格式化输出。\n注意：%.1f 表示保留 1 位小数，浮点数运算要注意运算顺序和精度。\n最佳实践：用有意义的变量名（height、weight、bmi）提高代码可读性。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "slug": "slices-maps",
+      "title": "Slice 与 Map",
+      "summary": "动态数组与键值映射，Go 最常用的两种容器。",
+      "type": "coding",
+      "minutes": 45,
+      "exercises": 7,
+      "section": "basics",
+      "sections": [
+        {
+          "id": "03-01",
+          "title": "Slice 基础",
+          "exerciseList": [
+            {
+              "id": "03-01-1",
+              "title": "创建 Slice",
+              "description": "创建 slice `nums := []int{1, 2, 3}`，用 `fmt.Println(nums)` 打印。Go 默认格式为 `[1 2 3]`（方括号内空格分隔）。",
+              "hint": "nums := []int{1, 2, 3}\n\tfmt.Println(nums)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "[1 2 3]" }],
+              "explanation": "考点：用字面量 []int{1, 2, 3} 创建 slice。\n注意：slice 打印格式为 [元素1 元素2 元素3]，方括号内用空格分隔。\n最佳实践：已知元素时用字面量创建，长度未知时用 make 创建。"
+            },
+            {
+              "id": "03-01-2",
+              "title": "append 添加元素",
+              "description": "创建 `nums := []int{1, 2}`，用 `append` 添加 3 和 4，打印结果（应为 [1 2 3 4]）。",
+              "hint": "nums = append(nums, 3, 4)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{1, 2}\n\t// 用 append 添加 3 和 4\n}\n",
+              "tests": [{ "type": "stdout", "expected": "[1 2 3 4]" }],
+              "explanation": "考点：append 向 slice 添加元素，返回一个新的 slice。\n注意：append 可能返回新的底层数组，必须用原变量接收返回值 nums = append(nums, 3, 4)。\n最佳实践：忘记接收 append 返回值是常见 bug，编译器不会报错。"
+            }
+          ]
+        },
+        {
+          "id": "03-02",
+          "title": "Slice 操作",
+          "exerciseList": [
+            {
+              "id": "03-02-1",
+              "title": "len 和 cap",
+              "description": "创建 `s := make([]int, 3, 10)`，打印 `len(s)` 和 `cap(s)`（用空格分隔，应为 3 10）。",
+              "hint": "fmt.Println(len(s), cap(s))",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\ts := make([]int, 3, 10)\n\t// 打印 len 和 cap\n}\n",
+              "tests": [{ "type": "stdout", "expected": "3 10" }],
+              "explanation": "考点：len 返回 slice 当前长度，cap 返回底层数组容量。\n注意：make([]int, 3, 10) 创建长度 3、容量 10 的 slice，初始元素全为 0。\n最佳实践：能预估容量时建议用 make 指定 cap，减少扩容次数提升性能。"
+            },
+            {
+              "id": "03-02-2",
+              "title": "for range 遍历",
+              "description": "创建 `nums := []int{10, 20, 30}`，用 `for range` 遍历并打印每个元素，每行一个（应为 10、20、30）。",
+              "hint": "for _, v := range nums { fmt.Println(v) }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{10, 20, 30}\n\t// 遍历并打印每个元素\n}\n",
+              "tests": [{ "type": "stdout", "expected": "10\n20\n30" }],
+              "explanation": "考点：for range 遍历 slice，返回索引和值两个变量。\n注意：不需要索引时用下划线 _ 忽略：for _, v := range nums。\n最佳实践：range 的第一个返回值是索引，不是值，新手容易搞混。"
+            }
+          ]
+        },
+        {
+          "id": "03-03",
+          "title": "Map 基础",
+          "exerciseList": [
+            {
+              "id": "03-03-1",
+              "title": "Map 取值",
+              "description": "创建 `m := map[string]int{\"a\": 1, \"b\": 2}`，打印 `m[\"a\"]` 的值（应输出 1）。",
+              "hint": "fmt.Println(m[\"a\"])",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "1" }],
+              "explanation": "考点：用 m[key] 访问 map 的值，map 用 make 或字面量创建。\n注意：map 是无序的，遍历时顺序不确定，不能依赖遍历顺序。\n最佳实践：map 的 key 必须是可比较类型，如 string、int 等。"
+            },
+            {
+              "id": "03-03-2",
+              "title": "判断 key 是否存在",
+              "description": "创建 `m := map[string]int{\"apple\": 5}`，用 `v, ok := m[key]` 判断 \"banana\" 是否存在。存在打印值，不存在打印 `not found`。",
+              "hint": "if _, ok := m[\"banana\"]; ok { } else { fmt.Println(\"not found\") }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tm := map[string]int{\"apple\": 5}\n\t// 判断 banana 是否存在\n}\n",
+              "tests": [{ "type": "stdout", "expected": "not found" }],
+              "explanation": "考点：用 v, ok := m[key] 判断 key 是否存在，ok 为 true 表示存在。\n注意：直接访问不存在的 key 会返回零值，不会报错，需用 ok 判断。\n最佳实践：处理可能缺失的 key 时，务必用两值赋值语法判断。"
+            }
+          ]
+        },
+        {
+          "id": "03-04",
+          "title": "综合小项目：购物清单",
+          "exerciseList": [
+            {
+              "id": "03-04-1",
+              "title": "制作购物清单",
+              "description": "创建一个字符串切片存储购物清单项（按顺序）：苹果、牛奶、面包、鸡蛋。然后：\n1. 用 append 添加 \"香蕉\"\n2. 用 len 打印商品总数\n3. 用 for range 遍历打印序号和商品名\n\n输出格式：\n```\n购物清单（共 5 项）：\n1. 苹果\n2. 牛奶\n3. 面包\n4. 鸡蛋\n5. 香蕉\n```",
+              "hint": "items := []string{\"苹果\", \"牛奶\", \"面包\", \"鸡蛋\"}\nitems = append(items, \"香蕉\")\nfmt.Printf(\"购物清单（共 %d 项）：\\n\", len(items))\nfor i, item := range items {\n\tfmt.Printf(\"%d. %s\\n\", i+1, item)\n}",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 创建购物清单 slice\n\t// 添加香蕉\n\t// 打印标题和总数\n\t// 遍历打印序号和商品名\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\titems := []string{\"苹果\", \"牛奶\", \"面包\", \"鸡蛋\"}\n\titems = append(items, \"香蕉\")\n\tfmt.Printf(\"购物清单（共 %d 项）：\\n\", len(items))\n\tfor i, item := range items {\n\t\tfmt.Printf(\"%d. %s\\n\", i+1, item)\n\t}\n}\n",
+              "tests": [{ "type": "stdout", "expected": "购物清单（共 5 项）：\n1. 苹果\n2. 牛奶\n3. 面包\n4. 鸡蛋\n5. 香蕉" }],
+              "explanation": "考点：综合运用 slice 创建、append、len 和 for range。\n注意：range 的索引从 0 开始，输出序号时需要 i+1。\n最佳实践：用 Printf 配合 %d %s 格式化输出更灵活，比字符串拼接清晰。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "slug": "control-flow",
+      "title": "条件与循环",
+      "summary": "if / for / switch——Go 的控制流比你想的更简洁。",
+      "type": "coding",
+      "minutes": 45,
+      "exercises": 7,
+      "section": "basics",
+      "sections": [
+        {
+          "id": "04-01",
+          "title": "if 条件",
+          "exerciseList": [
+            {
+              "id": "04-01-1",
+              "title": "if 判断",
+              "description": "用教程里的 `if x := 10; x > 5` 写法：若大于 5 打印 `big`，否则打印 `small`。",
+              "hint": "if x := 10; x > 5 { fmt.Println(\"big\") } else { ... }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "big" }],
+              "explanation": "考点：if 语句支持初始化语句，写法 if x := 10; x > 5，x 的作用域限于 if-else 块。\n注意：Go 的 if 不需要括号包裹条件，但花括号必须写。\n最佳实践：用初始化语句可以缩小变量作用域，避免变量泄漏到外部。"
+            },
+            {
+              "id": "04-01-2",
+              "title": "else if 多条件",
+              "description": "声明 `score := 85`，用 `if-else if` 判断：>=90 输出 A，>=80 输出 B，>=70 输出 C，否则输出 D。",
+              "hint": "if score >= 90 { } else if score >= 80 { } else if score >= 70 { } else { }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tscore := 85\n\t// 判断等级\n}\n",
+              "tests": [{ "type": "stdout", "expected": "B" }],
+              "explanation": "考点：if-else if-else 链式判断，从上到下匹配第一个满足的条件。\n注意：条件判断有顺序，score >= 80 必须在 score >= 90 之后才能正确分级。\n最佳实践：多个互斥条件用 if-else if 链，避免多个独立 if。"
+            }
+          ]
+        },
+        {
+          "id": "04-02",
+          "title": "for 循环",
+          "exerciseList": [
+            {
+              "id": "04-02-1",
+              "title": "for 计数循环",
+              "description": "用 `for` 循环打印 1 到 3，**每行一个数字**（共三行）。提示：可用 `for i := 1; i <= 3; i++`。",
+              "hint": "for i := 1; i <= 3; i++ { fmt.Println(i) }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\n}\n",
+              "tests": [{ "type": "stdout", "expected": "1\n2\n3" }],
+              "explanation": "考点：Go 只有 for 一种循环语句，for i := 1; i <= 3; i++ 是经典的计数循环。\n注意：Go 没有 while 关键字，但 for condition {} 等价于 while。\n最佳实践：注意循环边界，i <= 3 包含 3，i < 3 不包含 3。"
+            },
+            {
+              "id": "04-02-2",
+              "title": "for range 遍历",
+              "description": "遍历 `[]int{10, 20, 30}`，打印索引和值（格式：0 10、1 20、2 30，每行一组）。",
+              "hint": "for i, v := range nums { fmt.Println(i, v) }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tnums := []int{10, 20, 30}\n\t// 遍历并打印索引和值\n}\n",
+              "tests": [{ "type": "stdout", "expected": "0 10\n1 20\n2 30" }],
+              "explanation": "考点：for range 同时获取索引和值，fmt.Println(i, v) 多参数用空格分隔。\n注意：range 遍历 slice 时，i 是索引，v 是元素值的副本。\n最佳实践：同时需要索引和值时用 for i, v := range，只取值用 for _, v。"
+            }
+          ]
+        },
+        {
+          "id": "04-03",
+          "title": "switch 与 break/continue",
+          "exerciseList": [
+            {
+              "id": "04-03-1",
+              "title": "switch 判断",
+              "description": "声明 `day := \"Mon\"`，用 switch 判断：Mon 输出 Monday，Tue/Wed 输出 Weekday，其他输出 Weekend。",
+              "hint": "switch day { case \"Mon\": ... case \"Tue\", \"Wed\": ... default: ... }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tday := \"Mon\"\n\t// switch 判断\n}\n",
+              "tests": [{ "type": "stdout", "expected": "Monday" }],
+              "explanation": "考点：switch-case-default 结构，case 后不需要 break（Go 默认不穿透）。\n注意：一个 case 可以匹配多个值，用逗号分隔。\n最佳实践：相比 if-else 链，switch 在多分支判断时更清晰。"
+            },
+            {
+              "id": "04-03-2",
+              "title": "for 循环求和",
+              "description": "用 for 循环计算 1 到 10 的和，打印结果（应为 55）。",
+              "hint": "sum := 0; for i := 1; i <= 10; i++ { sum += i }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 计算 1-10 的和\n}\n",
+              "tests": [{ "type": "stdout", "expected": "55" }],
+              "explanation": "考点：用 for 循环累加求和，sum += i 等价于 sum = sum + i。\n注意：累加变量要在循环外初始化为 0。\n最佳实践：注意 += 运算符可以简化代码，避免重复写变量名。"
+            }
+          ]
+        },
+        {
+          "id": "04-04",
+          "title": "综合小项目：九九乘法表",
+          "exerciseList": [
+            {
+              "id": "04-04-1",
+              "title": "打印九九乘法表",
+              "description": "用两层 for 循环打印九九乘法表。外层循环 i 从 1 到 9，内层循环 j 从 1 到 i，每行打印完后换行。\n\n格式：每个式子占 6 个字符宽度（用 %dx%d=%-2d 格式化，结果左对齐占 2 位），式子之间加一个空格。\n\n输出前 3 行示例：\n```\n1x1=1   \n1x2=2   2x2=4   \n1x3=3   2x3=6   3x3=9   \n```\n... 以此类推到第 9 行。",
+              "hint": "for i := 1; i <= 9; i++ {\n\tfor j := 1; j <= i; j++ {\n\t\tfmt.Printf(\"%dx%d=%-2d  \", j, i, j*i)\n\t}\n\tfmt.Println()\n}",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 外层循环：i 从 1 到 9\n\t// 内层循环：j 从 1 到 i\n\t// 打印式子\n\t// 每行结束换行\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfor i := 1; i <= 9; i++ {\n\t\tfor j := 1; j <= i; j++ {\n\t\t\tfmt.Printf(\"%dx%d=%-2d  \", j, i, j*i)\n\t\t}\n\t\tfmt.Println()\n\t}\n}\n",
+              "tests": [{ "type": "stdout", "expected": "1x1=1   \n1x2=2   2x2=4   \n1x3=3   2x3=6   3x3=9   \n1x4=4   2x4=8   3x4=12  4x4=16  \n1x5=5   2x5=10  3x5=15  4x5=20  5x5=25  \n1x6=6   2x6=12  3x6=18  4x6=24  5x6=30  6x6=36  \n1x7=7   2x7=14  3x7=21  4x7=28  5x7=35  6x7=42  7x7=49  \n1x8=8   2x8=16  3x8=24  4x8=32  5x8=40  6x8=48  7x8=56  8x8=64  \n1x9=9   2x9=18  3x9=27  4x9=36  5x9=45  6x9=54  7x9=63  8x9=72  9x9=81  " }],
+              "explanation": "考点：双层 for 循环嵌套，外层控制行，内层控制列。\n注意：%-2d 表示左对齐占 2 位宽度，保证输出对齐美观。\n最佳实践：嵌套循环时注意循环变量名要有区分（i、j），避免混淆。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "slug": "functions",
+      "title": "函数",
+      "summary": "把逻辑包起来反复用——Go 程序的基石。",
+      "type": "coding",
+      "minutes": 40,
+      "exercises": 7,
+      "section": "basics",
+      "sections": [
+        {
+          "id": "05-01",
+          "title": "函数定义与调用",
+          "exerciseList": [
+            {
+              "id": "05-01-1",
+              "title": "简单函数",
+              "description": "在 main **下方**定义 `func add(a, b int) int`，返回两数之和。main 里已有 `fmt.Println(add(3, 4))`，运行应输出 7。",
+              "hint": "func add(a, b int) int { return a + b }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(add(3, 4))\n}\n\n// 在这里定义 add 函数\n",
+              "tests": [{ "type": "stdout", "expected": "7" }],
+              "explanation": "考点：定义函数 func add(a, b int) int，参数类型相同时可简写为 a, b int。\n注意：函数定义在 main 下方也可正常调用，Go 不要求先定义后使用。\n最佳实践：函数名用动词，参数名用名词，函数应保持单一职责。"
+            },
+            {
+              "id": "05-01-2",
+              "title": "无返回值函数",
+              "description": "定义 `func greet(name string)` 打印 `Hello, name!`，在 main 里调用 `greet(\"Alice\")`。",
+              "hint": "func greet(name string) { fmt.Println(\"Hello, \" + name + \"!\") }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tgreet(\"Alice\")\n}\n\n// 定义 greet 函数\n",
+              "tests": [{ "type": "stdout", "expected": "Hello, Alice!" }],
+              "explanation": "考点：无返回值函数不需要写返回类型，直接 func greet(name string)。\n注意：函数不需要返回值时不要写 return 或写空 return。\n最佳实践：字符串拼接用 + 简单直观，复杂场景可用 fmt.Sprintf。"
+            }
+          ]
+        },
+        {
+          "id": "05-02",
+          "title": "多返回值与可变参数",
+          "exerciseList": [
+            {
+              "id": "05-02-1",
+              "title": "多返回值",
+              "description": "实现 `func div(a, b int) (int, int)` 返回商和余数。main 已写好，运行应输出 `3 1`（Println 在数字间加空格）。",
+              "hint": "return a / b, a % b",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tq, r := div(10, 3)\n\tfmt.Println(q, r)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "3 1" }],
+              "explanation": "考点：Go 函数支持多返回值，(int, int) 表示返回两个 int。\n注意：调用时用 q, r := div(10, 3) 接收多个返回值。\n最佳实践：多返回值常用于返回结果和错误，如 (result, error)。"
+            },
+            {
+              "id": "05-02-2",
+              "title": "可变参数",
+              "description": "实现 `func sum(nums ...int) int` 返回所有参数的和。main 里调用 `sum(1, 2, 3, 4)`，应输出 10。",
+              "hint": "func sum(nums ...int) int {\n\tresult := 0\n\tfor _, v := range nums {\n\t\tresult += v\n\t}\n\treturn result\n}",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(sum(1, 2, 3, 4))\n}\n\n// 定义 sum 函数\n",
+              "tests": [{ "type": "stdout", "expected": "10" }],
+              "explanation": "考点：用 ...int 定义可变参数，函数内 nums 是 []int 类型的 slice。\n注意：可变参数必须是函数最后一个参数。\n最佳实践：可变参数让 API 更灵活，调用时可以传任意多个值或直接传 slice（用 nums...）。"
+            }
+          ]
+        },
+        {
+          "id": "05-03",
+          "title": "递归与 defer",
+          "exerciseList": [
+            {
+              "id": "05-03-1",
+              "title": "递归阶乘",
+              "description": "实现 `func factorial(n int) int` 计算阶乘。调用 `factorial(5)` 应输出 120。",
+              "hint": "if n == 0 { return 1 }; return n * factorial(n-1)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(factorial(5))\n}\n\n// 定义 factorial 函数\n",
+              "tests": [{ "type": "stdout", "expected": "120" }],
+              "explanation": "考点：递归函数必须有一个终止条件（n == 0），否则会无限递归。\n注意：递归深度过大可能导致栈溢出，实际场景需评估。\n最佳实践：递归适合处理树形结构、分治算法等，简单迭代用 for 更高效。"
+            },
+            {
+              "id": "05-03-2",
+              "title": "defer 延迟执行",
+              "description": "在 main 里先打印 `First`，然后 `defer fmt.Println(\"Last\")`，再打印 `Middle`。输出顺序应为 First、Middle、Last。",
+              "hint": "fmt.Println(\"First\")\n\tdefer fmt.Println(\"Last\")\n\tfmt.Println(\"Middle\")",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 先打印 First\n\t// 然后 defer\n\t// 再打印 Middle\n}\n",
+              "tests": [{ "type": "stdout", "expected": "First\nMiddle\nLast" }],
+              "explanation": "考点：defer 延迟到函数返回前执行，多个 defer 按 LIFO（后进先出）顺序执行。\n注意：defer 常用于资源释放（关闭文件、解锁互斥锁）。\n最佳实践：打开资源后立即 defer 关闭，避免遗忘。"
+            }
+          ]
+        },
+        {
+          "id": "05-04",
+          "title": "综合小项目：简单计算器",
+          "exerciseList": [
+            {
+              "id": "05-04-1",
+              "title": "实现加减乘除函数",
+              "description": "实现四个函数：`add(a, b int) int`、`subtract(a, b int) int`、`multiply(a, b int) int`、`divide(a, b int) (int, error)`。\n\n然后在 main 里调用这些函数计算 10 和 3 的加减乘除，并按以下格式输出：\n```\n10 + 3 = 13\n10 - 3 = 7\n10 * 3 = 30\n10 / 3 = 3\n```\n\n提示：除法用整数除法（/），可以先忽略 error 返回值用 _ 占位。",
+              "hint": "func add(a, b int) int { return a + b }\nfunc subtract(a, b int) int { return a - b }\nfunc multiply(a, b int) int { return a * b }\nfunc divide(a, b int) (int, error) { return a / b, nil }\n\nmain 里用 fmt.Printf 格式化输出。",
+              "starterCode": "package main\n\nimport \"fmt\"\n\n// 实现 add 函数\n\n// 实现 subtract 函数\n\n// 实现 multiply 函数\n\n// 实现 divide 函数\n\nfunc main() {\n\ta, b := 10, 3\n\t// 调用函数并打印结果\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\nfunc add(a, b int) int {\n\treturn a + b\n}\n\nfunc subtract(a, b int) int {\n\treturn a - b\n}\n\nfunc multiply(a, b int) int {\n\treturn a * b\n}\n\nfunc divide(a, b int) (int, error) {\n\treturn a / b, nil\n}\n\nfunc main() {\n\ta, b := 10, 3\n\tfmt.Printf(\"%d + %d = %d\\n\", a, b, add(a, b))\n\tfmt.Printf(\"%d - %d = %d\\n\", a, b, subtract(a, b))\n\tfmt.Printf(\"%d * %d = %d\\n\", a, b, multiply(a, b))\n\tresult, _ := divide(a, b)\n\tfmt.Printf(\"%d / %d = %d\", a, b, result)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "10 + 3 = 13\n10 - 3 = 7\n10 * 3 = 30\n10 / 3 = 3" }],
+              "explanation": "考点：综合运用函数定义、多返回值和 Printf 格式化。\n注意：divide 返回 (int, error)，忽略 error 时用 _ 占位：result, _ := divide(a, b)。\n最佳实践：函数命名要语义化（add、subtract），让代码自解释。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "slug": "structs-pointers",
+      "title": "结构体与指针",
+      "summary": "组织复杂数据，理解内存模型——Go 面向对象的基础。",
+      "type": "coding",
+      "minutes": 55,
+      "exercises": 7,
+      "section": "advanced",
+      "sections": [
+        {
+          "id": "06-01",
+          "title": "结构体定义与使用",
+          "exerciseList": [
+            {
+              "id": "06-01-1",
+              "title": "定义并创建结构体",
+              "description": "定义 `Person` 结构体（`Name string`, `Age int`），创建实例 `Person{Name: \"Alice\", Age: 20}`，打印 `p.Name`。",
+              "hint": "type Person struct { Name string; Age int }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\n// 定义 Person 结构体\n\nfunc main() {\n\tp := Person{Name: \"Alice\", Age: 20}\n\tfmt.Println(p.Name)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "Alice" }],
+              "explanation": "考点：type Name struct 定义结构体，用 Name{字段: 值} 创建实例。\n注意：用字段名初始化比按顺序初始化更清晰，字段名和值用冒号分隔。\n最佳实践：结构体名首字母大写（如 Person）表示可导出，小写表示包内私有。"
+            },
+            {
+              "id": "06-01-2",
+              "title": "方法",
+              "description": "为 `Rectangle` 添加 `Area()` 方法返回面积。调用 `Rectangle{4, 3}.Area()` 应输出 12。",
+              "hint": "func (r Rectangle) Area() float64 { return r.Width * r.Height }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\ntype Rectangle struct {\n\tWidth  float64\n\tHeight float64\n}\n\n// 为 Rectangle 添加 Area 方法\n\nfunc main() {\n\tfmt.Println(Rectangle{Width: 4, Height: 3}.Area())\n}\n",
+              "tests": [{ "type": "stdout", "expected": "12" }],
+              "explanation": "考点：为类型定义方法 func (r Rectangle) Area() float64，r 称为接收者。\n注意：方法可以访问接收者的所有字段。\n最佳实践：方法名用动词或名词，保持与类型语义一致。"
+            }
+          ]
+        },
+        {
+          "id": "06-02",
+          "title": "指针",
+          "exerciseList": [
+            {
+              "id": "06-02-1",
+              "title": "指针基础",
+              "description": "声明 `x := 42`，用 `&x` 获取指针，解引用打印值（应输出 42）。",
+              "hint": "p := &x; fmt.Println(*p)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tx := 42\n\t// 获取指针并解引用\n}\n",
+              "tests": [{ "type": "stdout", "expected": "42" }],
+              "explanation": "考点：& 取地址，* 解引用。p := &x 得到指向 x 的指针，*p 读取 x 的值。\n注意：Go 指针不能像 C 那样做指针运算，更安全。\n最佳实践：日常编程多用值传递，需要修改原变量或避免拷贝大对象时才用指针。"
+            },
+            {
+              "id": "06-02-2",
+              "title": "指针接收者",
+              "description": "为 `Counter` 添加 `Increment()` 方法（指针接收者），调用后计数加 1。",
+              "hint": "func (c *Counter) Increment() { c.Value++ }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\ntype Counter struct {\n\tValue int\n}\n\n// 为 Counter 添加 Increment 方法（指针接收者）\n\nfunc main() {\n\tc := Counter{Value: 0}\n\tc.Increment()\n\tfmt.Println(c.Value)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "1" }],
+              "explanation": "考点：用指针接收者 func (c *Counter) Increment() 才能修改结构体字段。\n注意：值接收者会拷贝一份，无法修改原对象；指针接收者直接操作原对象。\n最佳实践：需要修改接收者状态时用指针接收者，同一类型的方法保持接收者类型一致。"
+            }
+          ]
+        },
+        {
+          "id": "06-03",
+          "title": "结构体组合",
+          "exerciseList": [
+            {
+              "id": "06-03-1",
+              "title": "嵌入结构体",
+              "description": "定义 `Animal` 和 `Dog`，Dog 嵌入 Animal。调用 `Dog{Animal{\"旺财\"}}.Eat()` 应输出 `旺财 is eating`。",
+              "hint": "type Dog struct { Animal }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\ntype Animal struct {\n\tName string\n}\n\nfunc (a Animal) Eat() {\n\tfmt.Println(a.Name, \"is eating\")\n}\n\n// 定义 Dog，嵌入 Animal\n\nfunc main() {\n\td := Dog{Animal{Name: \"旺财\"}}\n\td.Eat()\n}\n",
+              "tests": [{ "type": "stdout", "expected": "旺财 is eating" }],
+              "explanation": "考点：Go 通过嵌入（embedding）实现组合，type Dog struct { Animal } 让 Dog 拥有 Animal 的字段和方法。\n注意：嵌入不是继承，Go 没有继承，提倡组合优于继承。\n最佳实践：嵌入后可以直接调用被嵌入类型的方法（d.Eat()），实现代码复用。"
+            }
+          ]
+        },
+        {
+          "id": "06-04",
+          "title": "综合小项目：学生成绩管理",
+          "exerciseList": [
+            {
+              "id": "06-04-1",
+              "title": "实现学生成绩管理系统",
+              "description": "定义 `Student` 结构体，包含 `Name string` 和 `Score int` 两个字段。\n\n实现以下方法：\n- `(s *Student) SetScore(score int)` —— 修改学生成绩（指针接收者）\n- `(s Student) Grade() string` —— 根据分数返回等级：90+ 为 A，80-89 为 B，70-79 为 C，60-69 为 D，60 以下为 F\n\n在 main 函数中：\n1. 创建 3 个学生：\n   - \"张三\"，成绩 92\n   - \"李四\"，成绩 78\n   - \"王五\"，成绩 55\n\n按以下格式输出每个学生的信息和等级：\n```\n张三: 92 分，等级 A\n李四: 78 分，等级 C\n王五: 55 分，等级 F\n```\n\n注意：每行文字、标点、空格必须完全一致。",
+              "hint": "type Student struct {\n\tName  string\n\tScore int\n}\n\nfunc (s *Student) SetScore(score int) {\n\ts.Score = score\n}\n\nfunc (s Student) Grade() string {\n\tif s.Score >= 90 { return \"A\" }\n\telse if s.Score >= 80 { return \"B\" }\n\telse if s.Score >= 70 { return \"C\" }\n\telse if s.Score >= 60 { return \"D\" }\n\telse { return \"F\" }\n}\n\nmain 函数中用 fmt.Printf 格式化输出。",
+              "starterCode": "package main\n\nimport \"fmt\"\n\n// 定义 Student 结构体\n\n// 实现 SetScore 方法（指针接收者）\n\n// 实现 Grade 方法（值接收者）\n\nfunc main() {\n\t// 创建 3 个学生并输出信息和等级\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\ntype Student struct {\n\tName  string\n\tScore int\n}\n\nfunc (s *Student) SetScore(score int) {\n\ts.Score = score\n}\n\nfunc (s Student) Grade() string {\n\tif s.Score >= 90 {\n\t\treturn \"A\"\n\t} else if s.Score >= 80 {\n\t\treturn \"B\"\n\t} else if s.Score >= 70 {\n\t\treturn \"C\"\n\t} else if s.Score >= 60 {\n\t\treturn \"D\"\n\t} else {\n\t\treturn \"F\"\n\t}\n}\n\nfunc main() {\n\ts1 := Student{Name: \"张三\", Score: 92}\n\ts2 := Student{Name: \"李四\", Score: 78}\n\ts3 := Student{Name: \"王五\", Score: 55}\n\tfmt.Printf(\"%s: %d 分，等级 %s\\n\", s1.Name, s1.Score, s1.Grade())\n\tfmt.Printf(\"%s: %d 分，等级 %s\\n\", s2.Name, s2.Score, s2.Grade())\n\tfmt.Printf(\"%s: %d 分，等级 %s\", s3.Name, s3.Score, s3.Grade())\n}\n",
+              "tests": [{ "type": "stdout", "expected": "张三: 92 分，等级 A\n李四: 78 分，等级 C\n王五: 55 分，等级 F" }],
+              "explanation": "考点：综合运用结构体、指针接收者、值接收者和格式化输出。\n注意：SetScore 修改字段需用指针接收者，Grade 只读取用值接收者即可。\n最佳实践：修改用指针接收者，只读用值接收者，这样语义清晰。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "slug": "error-handling",
+      "title": "错误处理",
+      "summary": "优雅地处理异常——Go 的错误处理模式。",
+      "type": "coding",
+      "minutes": 50,
+      "exercises": 5,
+      "section": "advanced",
+      "sections": [
+        {
+          "id": "07-01",
+          "title": "error 接口",
+          "exerciseList": [
+            {
+              "id": "07-01-1",
+              "title": "返回错误",
+              "description": "实现 `func divide(a, b int) (int, error)`，当 b 为 0 时返回错误。调用 `divide(10, 0)` 应打印错误信息。",
+              "hint": "if b == 0 { return 0, errors.New(\"division by zero\") }",
+              "starterCode": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\n// 实现 divide 函数\n\nfunc main() {\n\tresult, err := divide(10, 0)\n\tif err != nil {\n\t\tfmt.Println(err)\n\t} else {\n\t\tfmt.Println(result)\n\t}\n}\n",
+              "tests": [{ "type": "stdout", "expected": "division by zero" }],
+              "explanation": "考点：error 是 Go 的内置接口，用 errors.New 创建错误，多返回值 (int, error) 返回结果和错误。\n注意：调用方必须检查 err != nil，不能忽略错误。\n最佳实践：错误处理是 Go 的核心模式，不要用 panic 替代正常的错误返回。"
+            },
+            {
+              "id": "07-01-2",
+              "title": "错误包装",
+              "description": "使用 `fmt.Errorf(\"context: %w\", err)` 包装错误。",
+              "hint": "fmt.Errorf(\"divide failed: %w\", errors.New(\"zero\"))",
+              "starterCode": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\nfunc main() {\n\terr := errors.New(\"zero\")\n\twrapped := fmt.Errorf(\"divide failed: %w\", err)\n\tfmt.Println(wrapped)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "divide failed: zero" }],
+              "explanation": "考点：用 fmt.Errorf 配合 %w 动词包装错误，保留原始错误信息。\n注意：%w 用于包装错误（区别于 %v 仅格式化），可以用 errors.Unwrap 解包。\n最佳实践：每层包装添加上下文信息，便于定位错误来源。"
+            }
+          ]
+        },
+        {
+          "id": "07-02",
+          "title": "panic 与 recover",
+          "exerciseList": [
+            {
+              "id": "07-02-1",
+              "title": "defer 执行顺序",
+              "description": "依次 defer 打印 1、2、3，然后打印 main。输出顺序应为 main、3、2、1。",
+              "hint": "defer 后进先出",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tdefer fmt.Println(1)\n\tdefer fmt.Println(2)\n\tdefer fmt.Println(3)\n\tfmt.Println(\"main\")\n}\n",
+              "tests": [{ "type": "stdout", "expected": "main\n3\n2\n1" }],
+              "explanation": "考点：多个 defer 按 LIFO（后进先出）顺序执行，最后注册的最先执行。\n注意：defer 在函数返回前才执行，普通语句按顺序执行。\n最佳实践：理解 defer 的 LIFO 特性对资源释放顺序很重要。"
+            },
+            {
+              "id": "07-02-2",
+              "title": "recover",
+              "description": "使用 defer 和 recover 捕获 panic，打印恢复信息。",
+              "hint": "在 panic 前面写：\n\tdefer func() {\n\t\tif r := recover(); r != nil {\n\t\t\tfmt.Println(r)\n\t\t}\n\t}()",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 使用 defer 和 recover 捕获 panic\n\tpanic(\"error\")\n}\n",
+              "tests": [{ "type": "stdout", "expected": "error" }],
+              "explanation": "考点：recover 只能在 defer 函数中调用，用于捕获 panic 防止程序崩溃。\n注意：recover 在非 defer 上下文中调用返回 nil，无效。\n最佳实践：谨慎使用 panic/recover，仅用于真正的异常情况，不要替代正常错误处理。"
+            }
+          ]
+        },
+        {
+          "id": "07-03",
+          "title": "综合小项目：银行账户",
+          "exerciseList": [
+            {
+              "id": "07-03-1",
+              "title": "实现带错误处理的银行账户",
+              "description": "定义 `Account` 结构体，包含 `Owner string` 和 `Balance float64` 字段。\n\n实现以下方法：\n- `(a *Account) Deposit(amount float64) error` —— 存款，金额必须大于 0，否则返回错误 \"invalid deposit amount\"\n- `(a *Account) Withdraw(amount float64) error` —— 取款，金额必须大于 0 且不能超过余额，否则返回错误：\n  - 金额 <= 0: \"invalid withdraw amount\"\n  - 金额 > 余额: \"insufficient balance\"\n\n在 main 函数中：\n1. 创建账户：owner = \"小明\", balance = 1000\n2. 存入 500 元，成功后打印：`存款成功，余额：1500.00`\n3. 尝试取出 2000 元，捕获错误并打印：`取款失败：insufficient balance`\n4. 取出 300 元，成功后打印：`取款成功，余额：1200.00`\n5. 尝试存入 -100 元，捕获错误并打印：`存款失败：invalid deposit amount`\n\n输出格式如下：\n```\n存款成功，余额：1500.00\n取款失败：insufficient balance\n取款成功，余额：1200.00\n存款失败：invalid deposit amount\n```\n\n注意：余额保留两位小数，使用 fmt.Printf(\"%.2f\", balance)。",
+              "hint": "type Account struct {\n\tOwner   string\n\tBalance float64\n}\n\nfunc (a *Account) Deposit(amount float64) error {\n\tif amount <= 0 { return errors.New(\"invalid deposit amount\") }\n\ta.Balance += amount\n\treturn nil\n}\n\nfunc (a *Account) Withdraw(amount float64) error {\n\tif amount <= 0 { return errors.New(\"invalid withdraw amount\") }\n\tif amount > a.Balance { return errors.New(\"insufficient balance\") }\n\ta.Balance -= amount\n\treturn nil\n}",
+              "starterCode": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\n// 定义 Account 结构体\n\n// 实现 Deposit 方法\n\n// 实现 Withdraw 方法\n\nfunc main() {\n\t// 创建账户并进行各种操作\n}\n",
+              "solution": "package main\n\nimport (\n\t\"errors\"\n\t\"fmt\"\n)\n\ntype Account struct {\n\tOwner   string\n\tBalance float64\n}\n\nfunc (a *Account) Deposit(amount float64) error {\n\tif amount <= 0 {\n\t\treturn errors.New(\"invalid deposit amount\")\n\t}\n\ta.Balance += amount\n\treturn nil\n}\n\nfunc (a *Account) Withdraw(amount float64) error {\n\tif amount <= 0 {\n\t\treturn errors.New(\"invalid withdraw amount\")\n\t}\n\tif amount > a.Balance {\n\t\treturn errors.New(\"insufficient balance\")\n\t}\n\ta.Balance -= amount\n\treturn nil\n}\n\nfunc main() {\n\tacc := &Account{Owner: \"小明\", Balance: 1000}\n\terr := acc.Deposit(500)\n\tif err != nil {\n\t\tfmt.Printf(\"存款失败：%s\\n\", err.Error())\n\t} else {\n\t\tfmt.Printf(\"存款成功，余额：%.2f\\n\", acc.Balance)\n\t}\n\terr = acc.Withdraw(2000)\n\tif err != nil {\n\t\tfmt.Printf(\"取款失败：%s\\n\", err.Error())\n\t} else {\n\t\tfmt.Printf(\"取款成功，余额：%.2f\\n\", acc.Balance)\n\t}\n\terr = acc.Withdraw(300)\n\tif err != nil {\n\t\tfmt.Printf(\"取款失败：%s\\n\", err.Error())\n\t} else {\n\t\tfmt.Printf(\"取款成功，余额：%.2f\\n\", acc.Balance)\n\t}\n\terr = acc.Deposit(-100)\n\tif err != nil {\n\t\tfmt.Printf(\"存款失败：%s\", err.Error())\n\t} else {\n\t\tfmt.Printf(\"存款成功，余额：%.2f\", acc.Balance)\n\t}\n}\n",
+              "tests": [{ "type": "stdout", "expected": "存款成功，余额：1500.00\n取款失败：insufficient balance\n取款成功，余额：1200.00\n存款失败：invalid deposit amount" }],
+              "explanation": "考点：综合运用结构体、指针接收者、错误处理和格式化输出。\n注意：方法中要先校验参数（amount <= 0），再操作状态，最后返回 nil 或 error。\n最佳实践：错误信息用英文保持简洁，业务输出用中文提示用户。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "slug": "concurrency",
+      "title": "并发编程",
+      "summary": "goroutine 和 channel——Go 最强大的特性。",
+      "type": "coding",
+      "minutes": 60,
+      "exercises": 6,
+      "section": "advanced",
+      "sections": [
+        {
+          "id": "08-01",
+          "title": "goroutine 与 channel",
+          "exerciseList": [
+            {
+              "id": "08-01-1",
+              "title": "启动 goroutine",
+              "description": "使用 go 启动一个 goroutine 打印 `hello`，主函数打印 `main`。",
+              "hint": "在 fmt.Println(\"main\") 前面写：go fmt.Println(\"hello\")",
+              "starterCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\t// 启动 goroutine\n\tfmt.Println(\"main\")\n\ttime.Sleep(time.Second)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "hello\nmain" }],
+              "explanation": "考点：go 关键字启动 goroutine，goroutine 是 Go 的轻量级线程。\n注意：main 函数不会等待 goroutine 完成，需要用 time.Sleep 或 sync.WaitGroup 同步。\n最佳实践：生产代码用 sync.WaitGroup 或 channel 同步，不要依赖 time.Sleep。"
+            },
+            {
+              "id": "08-01-2",
+              "title": "channel 通信",
+              "description": "创建 channel，在 goroutine 中发送数据，主函数接收并打印。",
+              "hint": "ch := make(chan int); go func() { ch <- 42 }(); fmt.Println(<-ch)",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\t// 创建 channel 并通信\n}\n",
+              "tests": [{ "type": "stdout", "expected": "42" }],
+              "explanation": "考点：make(chan int) 创建 channel，用 <- 发送和接收数据。\n注意：无缓冲 channel 发送会阻塞直到有接收者，实现同步。\n最佳实践：用 channel 在 goroutine 间传递数据，遵循不要通过共享内存通信的原则。"
+            }
+          ]
+        },
+        {
+          "id": "08-02",
+          "title": "select 与并发安全",
+          "exerciseList": [
+            {
+              "id": "08-02-1",
+              "title": "select",
+              "description": "使用 select 同时等待两个 channel，谁先就绪就处理谁。",
+              "hint": "select { case <-ch1: ... case <-ch2: ... }",
+              "starterCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nfunc main() {\n\tch1 := make(chan string)\n\tch2 := make(chan string)\n\tgo func() {\n\t\ttime.Sleep(100 * time.Millisecond)\n\t\tch1 <- \"ch1\"\n\t}()\n\tgo func() {\n\t\ttime.Sleep(50 * time.Millisecond)\n\t\tch2 <- \"ch2\"\n\t}()\n\tselect {\n\tcase msg := <-ch1:\n\t\tfmt.Println(msg)\n\tcase msg := <-ch2:\n\t\tfmt.Println(msg)\n\t}\n}\n",
+              "tests": [{ "type": "stdout", "expected": "ch2" }],
+              "explanation": "考点：select 同时等待多个 channel，哪个先就绪就执行哪个 case。\n注意：多个 case 同时就绪时随机选一个，保证公平。\n最佳实践：select 配合 time.After 可以实现超时控制，避免永久阻塞。"
+            },
+            {
+              "id": "08-02-2",
+              "title": "sync.Mutex",
+              "description": "使用 sync.Mutex 保护共享变量，避免竞态条件。",
+              "hint": "在 counter++ 前后加锁：\n\tmu.Lock()\n\tcounter++\n\tmu.Unlock()",
+              "starterCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nvar (\n\tcounter int\n\tmu      sync.Mutex\n)\n\nfunc increment() {\n\tfor i := 0; i < 1000; i++ {\n\t\t// 加锁保护\n\t\tcounter++\n\t}\n}\n\nfunc main() {\n\tvar wg sync.WaitGroup\n\twg.Add(2)\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tincrement()\n\t}()\n\tgo func() {\n\t\tdefer wg.Done()\n\t\tincrement()\n\t}()\n\twg.Wait()\n\tfmt.Println(counter)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "2000" }],
+              "explanation": "考点：sync.Mutex 保护共享变量，Lock/Unlock 保证同一时刻只有一个 goroutine 访问。\n注意：不加锁的并发写会导致竞态条件，结果不可预测。\n最佳实践：用 defer mu.Unlock() 确保锁一定释放，避免死锁。"
+            }
+          ]
+        },
+        {
+          "id": "08-03",
+          "title": "综合小项目：并发求和",
+          "exerciseList": [
+            {
+              "id": "08-03-1",
+              "title": "使用 goroutine 并发计算数组和",
+              "description": "将一个大数组分成 4 段，用 4 个 goroutine 分别计算每段的和，然后汇总结果。\n\n给定数组：`numbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}`\n\n分成 4 段，每段 3 个数：\n- 第 1 段：1, 2, 3 → 和为 6\n- 第 2 段：4, 5, 6 → 和为 15\n- 第 3 段：7, 8, 9 → 和为 24\n- 第 4 段：10, 11, 12 → 和为 33\n\n使用 channel 收集每段的计算结果，最后求和并打印：`总和：78`\n\n要求：\n1. 使用 `sync.WaitGroup` 等待所有 goroutine 完成\n2. 使用带缓冲的 channel（容量 4）收集结果\n3. 关闭 channel 后用 for range 读取所有结果并求和\n\n输出格式：\n```\n总和：78\n```",
+              "hint": "ch := make(chan int, 4)\nvar wg sync.WaitGroup\n\nfor i := 0; i < 4; i++ {\n\twg.Add(1)\n\tgo func(start int) {\n\t\tdefer wg.Done()\n\t\tsum := 0\n\t\tfor j := start; j < start+3; j++ {\n\t\t\tsum += numbers[j]\n\t\t}\n\t\tch <- sum\n\t}(i * 3)\n}\n\nwg.Wait()\nclose(ch)\n\ntotal := 0\nfor s := range ch {\n\ttotal += s\n}",
+              "starterCode": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tnumbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}\n\t// 用 4 个 goroutine 分段计算和\n\t// 用 channel 收集结果\n\t// 汇总并打印\n}\n",
+              "solution": "package main\n\nimport (\n\t\"fmt\"\n\t\"sync\"\n)\n\nfunc main() {\n\tnumbers := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}\n\tch := make(chan int, 4)\n\tvar wg sync.WaitGroup\n\n\tfor i := 0; i < 4; i++ {\n\t\twg.Add(1)\n\t\tgo func(start int) {\n\t\t\tdefer wg.Done()\n\t\t\tsum := 0\n\t\t\tfor j := start; j < start+3; j++ {\n\t\t\t\tsum += numbers[j]\n\t\t\t}\n\t\t\tch <- sum\n\t\t}(i * 3)\n\t}\n\n\twg.Wait()\n\tclose(ch)\n\n\ttotal := 0\n\tfor s := range ch {\n\t\ttotal += s\n\t}\n\n\tfmt.Printf(\"总和：%d\", total)\n}\n",
+              "tests": [{ "type": "stdout", "expected": "总和：78" }],
+              "explanation": "考点：综合运用 goroutine、WaitGroup、带缓冲 channel 和 for range。\n注意：channel 发送完所有数据后要 close，for range 才能正常退出。\n最佳实践：WaitGroup 等待所有 goroutine 完成后再 close channel，避免向已关闭 channel 发送数据。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "slug": "interfaces",
+      "title": "接口",
+      "summary": "隐式实现——Go 最优雅的设计之一。",
+      "type": "coding",
+      "minutes": 50,
+      "exercises": 6,
+      "section": "advanced",
+      "sections": [
+        {
+          "id": "09-01",
+          "title": "实现 Stringer 接口",
+          "exerciseList": [
+            {
+              "id": "09-01-1",
+              "title": "Stringer 基础",
+              "description": "为已定义的 `Person` 结构体添加 `String() string` 方法，使 `fmt.Println(p)` 输出 **`Person: Alice`**（注意格式：Person 后英文冒号+空格）。",
+              "hint": "func (p Person) String() string { return \"Person: \" + p.Name }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tp := Person{Name: \"Alice\"}\n\tfmt.Println(p)\n}\n\ntype Person struct {\n\tName string\n}\n",
+              "tests": [{ "type": "stdout", "expected": "Person: Alice" }],
+              "explanation": "考点：实现 String() string 方法即可满足 fmt.Stringer 接口，fmt.Println 会自动调用。\n注意：Go 接口是隐式实现，不需要显式声明 implements。\n最佳实践：为常用结构体实现 String() 方法，便于调试和打印。"
+            },
+            {
+              "id": "09-01-2",
+              "title": "带多个字段的 String()",
+              "description": "为 `Person` 添加 `Age` 字段，修改 `String()` 输出：`Person: Alice, 20`（格式：Person: 名字, 年龄）。",
+              "hint": "func (p Person) String() string { return fmt.Sprintf(\"Person: %s, %d\", p.Name, p.Age) }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tp := Person{Name: \"Alice\", Age: 20}\n\tfmt.Println(p)\n}\n\ntype Person struct {\n\tName string\n\tAge  int\n}\n",
+              "tests": [{ "type": "stdout", "expected": "Person: Alice, 20" }],
+              "explanation": "考点：用 fmt.Sprintf 拼接多个字段返回自定义字符串。\n注意：String() 方法的接收者建议用值类型，避免打印指针时出现 &{}。\n最佳实践：String() 应返回简洁、可读的字符串表示，便于日志和调试。"
+            }
+          ]
+        },
+        {
+          "id": "09-02",
+          "title": "自定义接口",
+          "exerciseList": [
+            {
+              "id": "09-02-1",
+              "title": "Shape 接口",
+              "description": "定义 `Shape` 接口（包含 `Area() float64`），为 `Circle` 类型实现 `Area()` 方法（面积 = 3.14 * r * r）。调用 `Circle{5}.Area()` 应输出 78.5。",
+              "hint": "type Shape interface { Area() float64 }\nfunc (c Circle) Area() float64 { return 3.14 * c.Radius * c.Radius }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\ntype Circle struct {\n\tRadius float64\n}\n\n// 定义 Shape 接口\n\n// 为 Circle 实现 Area 方法\n\nfunc main() {\n\tc := Circle{Radius: 5}\n\tfmt.Println(c.Area())\n}\n",
+              "tests": [{ "type": "stdout", "expected": "78.5" }],
+              "explanation": "考点：定义接口 type Shape interface { Area() float64 }，为类型实现方法即满足接口。\n注意：Go 接口只定义方法签名，不包含实现。\n最佳实践：接口名一般用 -er 后缀（如 Reader、Writer），方法名用动词。"
+            },
+            {
+              "id": "09-02-2",
+              "title": "多态",
+              "description": "继续上一题，添加 `Rectangle` 类型并实现 `Shape` 接口。创建 `[]Shape` 切片，包含一个 Circle 和一个 Rectangle，打印第一个元素的面积。",
+              "hint": "shapes := []Shape{Circle{5}, Rectangle{4, 3}}\nfmt.Println(shapes[0].Area())",
+              "starterCode": "package main\n\nimport \"fmt\"\n\ntype Shape interface {\n\tArea() float64\n}\n\ntype Circle struct {\n\tRadius float64\n}\n\nfunc (c Circle) Area() float64 {\n\treturn 3.14 * c.Radius * c.Radius\n}\n\ntype Rectangle struct {\n\tWidth  float64\n\tHeight float64\n}\n\n// 为 Rectangle 实现 Area 方法\n\nfunc main() {\n\tshapes := []Shape{Circle{Radius: 5}, Rectangle{Width: 4, Height: 3}}\n\tfmt.Println(shapes[0].Area())\n}\n",
+              "tests": [{ "type": "stdout", "expected": "78.5" }],
+              "explanation": "考点：接口实现多态，[]Shape 切片可以存放不同的具体类型，统一调用 Area()。\n注意：接口变量持有具体类型的值，调用时动态分派到对应实现。\n最佳实践：用接口类型的集合可以统一处理不同类型，是 Go 的核心设计模式。"
+            }
+          ]
+        },
+        {
+          "id": "09-03",
+          "title": "类型断言",
+          "exerciseList": [
+            {
+              "id": "09-03-1",
+              "title": "类型断言",
+              "description": "声明 `var i any = 42`，用类型断言判断是否为 int 类型，如果是则打印 `int: 42`。",
+              "hint": "if v, ok := i.(int); ok { fmt.Printf(\"int: %d\\n\", v) }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\nfunc main() {\n\tvar i any = 42\n\t// 类型断言\n}\n",
+              "tests": [{ "type": "stdout", "expected": "int: 42" }],
+              "explanation": "考点：用 i.(int) 做类型断言，v, ok := i.(int) 的 ok 表示断言是否成功。\n注意：直接断言失败会 panic，两值形式更安全。\n最佳实践：优先用两值断言 v, ok := i.(T) 避免 panic，或用 type switch 处理多种类型。"
+            }
+          ]
+        },
+        {
+          "id": "09-04",
+          "title": "综合小项目：动物叫声模拟器",
+          "exerciseList": [
+            {
+              "id": "09-04-1",
+              "title": "实现动物叫声接口",
+              "description": "定义 `Animal` 接口，包含 `Speak() string` 方法。\n\n定义三种动物结构体并实现 Animal 接口：\n- `Dog`：`Speak()` 返回 \"Woof!\"\n- `Cat`：`Speak()` 返回 \"Meow!\"\n- `Cow`：`Speak()` 返回 \"Moo!\"\n\n在 main 函数中：\n1. 创建 `[]Animal` 切片，依次包含 Dog{}、Cat{}、Cow{}\n2. 遍历切片，调用每个动物的 Speak() 方法，按格式输出：\n```\nDog says: Woof!\nCat says: Meow!\nCow says: Moo!\n```\n\n提示：可以用 fmt.Printf(\"%T says: %s\\n\", animal, animal.Speak()) 来输出类型名。",
+              "hint": "type Animal interface {\n\tSpeak() string\n}\n\ntype Dog struct{}\nfunc (d Dog) Speak() string { return \"Woof!\" }\n\ntype Cat struct{}\nfunc (c Cat) Speak() string { return \"Meow!\" }\n\ntype Cow struct{}\nfunc (c Cow) Speak() string { return \"Moo!\" }",
+              "starterCode": "package main\n\nimport \"fmt\"\n\n// 定义 Animal 接口\n\n// 定义 Dog 结构体并实现 Speak\n\n// 定义 Cat 结构体并实现 Speak\n\n// 定义 Cow 结构体并实现 Speak\n\nfunc main() {\n\t// 创建动物切片并遍历输出\n}\n",
+              "solution": "package main\n\nimport \"fmt\"\n\ntype Animal interface {\n\tSpeak() string\n}\n\ntype Dog struct{}\n\nfunc (d Dog) Speak() string {\n\treturn \"Woof!\"\n}\n\ntype Cat struct{}\n\nfunc (c Cat) Speak() string {\n\treturn \"Meow!\"\n}\n\ntype Cow struct{}\n\nfunc (c Cow) Speak() string {\n\treturn \"Moo!\"\n}\n\nfunc main() {\n\tanimals := []Animal{Dog{}, Cat{}, Cow{}}\n\tfor _, animal := range animals {\n\t\tfmt.Printf(\"%T says: %s\\n\", animal, animal.Speak())\n\t}\n}\n",
+              "tests": [{ "type": "stdout", "expected": "main.Dog says: Woof!\nmain.Cat says: Meow!\nmain.Cow says: Moo!" }],
+              "explanation": "考点：综合运用接口定义、多类型实现和多态遍历。\n注意：fmt.Printf 配合 %T 输出变量的具体类型名，包含包名前缀（如 main.Dog）。\n最佳实践：用接口统一不同类型的行为，是 Go 实现多态的标准方式。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "slug": "go-modules",
+      "title": "Go Modules 与项目结构",
+      "summary": "go.mod、依赖管理、标准项目布局。",
+      "type": "reading",
+      "minutes": 25,
+      "exercises": 0,
+      "section": "engineering"
+    },
+    {
+      "id": "11",
+      "slug": "testing",
+      "title": "Go 测试",
+      "summary": "单元测试、表格驱动测试、Benchmark——保证代码质量的关键。",
+      "type": "reading",
+      "minutes": 30,
+      "exercises": 0,
+      "section": "engineering"
+    }
+  ]
+}
