@@ -1,3 +1,8 @@
 *.css linguist-vendored
 *.svg linguist-vendored
 *.png linguist-vendored
+*.jpg linguist-vendored
+*.html linguist-vendored
+frontend/** linguist-vendored
+docs/** linguist-documentation
+content/** linguist-documentation
