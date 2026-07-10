@@ -144,16 +144,16 @@ export function ChapterPage() {
                             const withinSectionUnlocked = exIndex === 0 || isExerciseDone(section.exerciseList![exIndex - 1].id)
                             const exUnlocked = unlocked && withinSectionUnlocked
                             return (
-                              <a
+                              <Link
                                 key={ex.id}
-                                href={exUnlocked ? `/chapter/${slug}/exercise/${ex.id}` : '#'}
+                                to={exUnlocked ? `/chapter/${slug}/exercise/${ex.id}` : '#'}
                                 className={`sidebar-exercise-link ${exDone ? 'done' : ''} ${!exUnlocked ? 'locked' : ''}`}
                                 onClick={(e) => !exUnlocked && e.preventDefault()}
                               >
                                 <span className="sidebar-exercise-num">{exIndex + 1}</span>
                                 <span className="sidebar-exercise-text">{ex.title}</span>
                                 {exDone && <span className="sidebar-exercise-check">✓</span>}
-                              </a>
+                              </Link>
                             )
                           })}
                         </div>
