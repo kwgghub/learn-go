@@ -16,7 +16,7 @@ type API struct {
 }
 
 func New(store *content.Store) *API {
-	return &API{store: store, timeout: 8 * time.Second}
+	return &API{store: store, timeout: 30 * time.Second}
 }
 
 func (a *API) Register(mux *http.ServeMux) {
