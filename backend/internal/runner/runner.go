@@ -45,13 +45,36 @@ func RunGo(code string, timeout time.Duration) Result {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	cmd := exec.CommandContext(ctx, "go", "run", mainPath)
-	cmd.Dir = dir
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
+	binPath := filepath.Join(dir, "app")
+	buildCmd := exec.CommandContext(ctx, "go", "build", "-o", binPath, mainPath)
+	buildCmd.Dir = dir
+	var buildStderr bytes.Buffer
+	buildCmd.Stderr = &buildStderr
 
-	runErr := cmd.Run()
+	if err := buildCmd.Run(); err != nil {
+		if ctx.Err() == context.DeadlineExceeded {
+			return Result{
+				Stderr:   trimOutput(buildStderr.String()),
+				ExitCode: -1,
+				Duration: time.Since(start).Milliseconds(),
+				Error:    fmt.Sprintf("编译超时（%s）", timeout),
+			}
+		}
+		return Result{
+			Stderr:   trimOutput(buildStderr.String()),
+			ExitCode: 1,
+			Duration: time.Since(start).Milliseconds(),
+			Error:    errorMessage(err),
+		}
+	}
+
+	runCmd := exec.CommandContext(ctx, binPath)
+	runCmd.Dir = dir
+	var stdout, stderr bytes.Buffer
+	runCmd.Stdout = &stdout
+	runCmd.Stderr = &stderr
+
+	runErr := runCmd.Run()
 	exitCode := 0
 	if runErr != nil {
 		if ctx.Err() == context.DeadlineExceeded {
@@ -60,7 +83,7 @@ func RunGo(code string, timeout time.Duration) Result {
 				Stderr:   trimOutput(stderr.String()),
 				ExitCode: -1,
 				Duration: time.Since(start).Milliseconds(),
-				Error:    fmt.Sprintf("执行超时（%s）", timeout),
+				Error:    fmt.Sprintf("运行超时（%s）", timeout),
 			}
 		}
 		if exitErr, ok := runErr.(*exec.ExitError); ok {
