@@ -1,0 +1,1 @@
+{"code": "package main\nimport \"fmt\"\nfunc main() {\n\tfmt.Println(\"hello\")\n}"}

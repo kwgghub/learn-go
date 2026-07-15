@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"encoding/json"
-	"net/http"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
 
 	"learn-go/backend/internal/content"
 	"learn-go/backend/internal/runner"
@@ -19,19 +19,19 @@ func New(store *content.Store) *API {
 	return &API{store: store, timeout: 60 * time.Second}
 }
 
-func (a *API) Register(mux *http.ServeMux) {
-	mux.HandleFunc("GET /api/health", a.health)
-	mux.HandleFunc("GET /api/catalog", a.catalog)
-	mux.HandleFunc("GET /api/chapters/{slug}", a.chapter)
-	mux.HandleFunc("POST /api/run", a.run)
-	mux.HandleFunc("POST /api/submit", a.submit)
+func (a *API) Register(r *gin.Engine) {
+	r.GET("/api/health", a.health)
+	r.GET("/api/catalog", a.catalog)
+	r.GET("/api/chapters/:slug", a.chapter)
+	r.POST("/api/run", a.run)
+	r.POST("/api/submit", a.submit)
 }
 
-func (a *API) health(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
+func (a *API) health(c *gin.Context) {
+	c.JSON(200, gin.H{"status": "ok"})
 }
 
-func (a *API) catalog(w http.ResponseWriter, r *http.Request) {
+func (a *API) catalog(c *gin.Context) {
 	catalog := a.store.Catalog()
 	public := struct {
 		Sections []content.Section `json:"sections"`
@@ -62,14 +62,14 @@ func (a *API) catalog(w http.ResponseWriter, r *http.Request) {
 			ExerciseIDs: ids,
 		})
 	}
-	writeJSON(w, http.StatusOK, public)
+	c.JSON(200, public)
 }
 
-func (a *API) chapter(w http.ResponseWriter, r *http.Request) {
-	slug := r.PathValue("slug")
+func (a *API) chapter(c *gin.Context) {
+	slug := c.Param("slug")
 	ch, ok := a.store.ChapterBySlug(slug)
 	if !ok {
-		writeJSON(w, http.StatusNotFound, map[string]string{"error": "章节不存在"})
+		c.JSON(404, gin.H{"error": "章节不存在"})
 		return
 	}
 	if ch.Type == "coding" {
@@ -77,10 +77,10 @@ func (a *API) chapter(w http.ResponseWriter, r *http.Request) {
 		for i := range safe.ExerciseList {
 			safe.ExerciseList[i].Solution = ""
 		}
-		writeJSON(w, http.StatusOK, safe)
+		c.JSON(200, safe)
 		return
 	}
-	writeJSON(w, http.StatusOK, ch)
+	c.JSON(200, ch)
 }
 
 type runRequest struct {
@@ -105,33 +105,33 @@ type chapterSummary struct {
 	ExerciseIDs []string `json:"exerciseIds"`
 }
 
-func (a *API) run(w http.ResponseWriter, r *http.Request) {
+func (a *API) run(c *gin.Context) {
 	var req runRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "无效请求"})
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": "无效请求"})
 		return
 	}
 	if strings.TrimSpace(req.Code) == "" {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "代码不能为空"})
+		c.JSON(400, gin.H{"error": "代码不能为空"})
 		return
 	}
 	result := runner.RunGo(req.Code, a.timeout)
-	writeJSON(w, http.StatusOK, result)
+	c.JSON(200, result)
 }
 
-func (a *API) submit(w http.ResponseWriter, r *http.Request) {
+func (a *API) submit(c *gin.Context) {
 	var req submitRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "无效请求"})
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(400, gin.H{"error": "无效请求"})
 		return
 	}
 	_, ex, ok := a.store.Exercise(req.ChapterSlug, req.ExerciseID)
 	if !ok {
-		writeJSON(w, http.StatusNotFound, map[string]string{"error": "题目不存在"})
+		c.JSON(404, gin.H{"error": "题目不存在"})
 		return
 	}
 	if len(ex.Tests) == 0 {
-		writeJSON(w, http.StatusOK, runner.Validation{Passed: true, Message: "本题为阅读题，已标记完成"})
+		c.JSON(200, runner.Validation{Passed: true, Message: "本题为阅读题，已标记完成"})
 		return
 	}
 
@@ -140,33 +140,14 @@ func (a *API) submit(w http.ResponseWriter, r *http.Request) {
 		case "stdout":
 			v := runner.ValidateStdout(req.Code, tc.Expected, a.timeout)
 			if !v.Passed {
-				writeJSON(w, http.StatusOK, v)
+				c.JSON(200, v)
 				return
 			}
 		default:
-			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "不支持的测试类型"})
+			c.JSON(400, gin.H{"error": "不支持的测试类型"})
 			return
 		}
 	}
 
-	writeJSON(w, http.StatusOK, runner.Validation{Passed: true, Message: "通过！做得好 🎉"})
-}
-
-func writeJSON(w http.ResponseWriter, status int, v any) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(status)
-	_ = json.NewEncoder(w).Encode(v)
-}
-
-func CORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
+	c.JSON(200, runner.Validation{Passed: true, Message: "通过！做得好 🎉"})
 }

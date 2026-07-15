@@ -2,8 +2,10 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"os"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 
 	"learn-go/backend/internal/content"
 	"learn-go/backend/internal/handler"
@@ -16,14 +18,21 @@ func main() {
 		log.Fatalf("加载课程内容失败: %v", err)
 	}
 
-	mux := http.NewServeMux()
+	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins: true,
+		AllowMethods:    []string{"GET", "POST", "OPTIONS"},
+		AllowHeaders:    []string{"Content-Type"},
+	}))
+
 	api := handler.New(store)
-	api.Register(mux)
+	api.Register(r)
 
 	addr := envOr("ADDR", ":8080")
 	log.Printf("learn-go API 运行于 http://localhost%s", addr)
 	log.Printf("课程内容: %s", contentPath)
-	if err := http.ListenAndServe(addr, handler.CORS(mux)); err != nil {
+	if err := r.Run(addr); err != nil {
 		log.Fatal(err)
 	}
 }
